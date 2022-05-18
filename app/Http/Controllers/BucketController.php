@@ -51,6 +51,7 @@ class BucketController extends BaseController
     public function store(Request $request)
     {
         try {
+            //$this->s3Client->createBucketWebsite($request->bucketName, $request->region);
             $this->s3Client->createBucket($request->bucketName, $request->region);
             $message = 'ok';
         } catch (S3Exception $e) {

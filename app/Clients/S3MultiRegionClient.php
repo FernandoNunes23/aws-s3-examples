@@ -88,12 +88,46 @@ class S3MultiRegionClient
         ]);
     }
 
-    public function putObjectWithBody(string $bucketName, string $filename, $body)
+    /**
+     * @param string $bucketName
+     * @param string $filename
+     * @param $body
+     * @param string|null $contentType
+     */
+    public function putObjectWithBody(string $bucketName, string $filename, $body, string $contentType = null)
     {
-        $this->client->putObject([
+        $data = [
             'Bucket' => $bucketName,
             'Key' => $filename,
             'Body' => $body
+        ];
+
+        if (!empty($contentType)) {
+            $data['ContentType'] = $contentType;
+        }
+
+        $this->client->putObject($data);
+    }
+
+    /**
+     *
+     * @param string $bucketName
+     * @param string|null $region
+     */
+    public function createBucketWebsite(string $bucketName, ?string $region = null)
+    {
+        $this->createBucket($bucketName, $region);
+
+         $this->client->putBucketWebsite([
+            'Bucket' => $bucketName,
+            'WebsiteConfiguration' => [
+                'ErrorDocument' => [
+                    'Key' => 'error.html',
+                ],
+                'IndexDocument' => [
+                    'Suffix' => 'index.html',
+                ],
+            ],
         ]);
     }
 
